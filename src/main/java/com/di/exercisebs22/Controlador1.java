@@ -5,15 +5,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 public class Controlador1 {
 
     @Autowired ListaCiudadesService lista;
 
     @PostMapping("/controlador1/addCiudad")
-    public void addCiudad(@RequestBody Ciudad newCiudad)
-    {
-        lista.addCiudad(newCiudad);
+    public String addCiudad(@RequestBody Map<String,Object> body) {
+        String error = "Error en los datos de entrada";
+        if (body==null) return error;
+        if (body.get("nombre").equals("")) return error;
+        if (body.get("numeroHabitantes").equals("")) return error;
+        lista.addCiudad(new Ciudad(body.get("nombre").toString(), Integer.parseInt(body.get("numeroHabitantes").toString())));
+        return "Ciudad añadida a la lista.";
     }
 }
 
